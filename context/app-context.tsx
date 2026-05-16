@@ -76,6 +76,7 @@ export interface AppContextType {
 
   addProject: (project: Omit<Project, 'id' | 'createdDate'>) => Promise<void>
   updateProject: (id: string, updates: Partial<Project>) => Promise<void>
+  deleteProject: (id: string) => Promise<void>
 
   showToast: (type: Toast['type'], message: string) => void
   removeToast: (id: string) => void
@@ -126,13 +127,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const applyWorkspace = useCallback(
     async (user: TeamMember) => {
       const backendProjects = await api.getProjects()
+      const validProjects = backendProjects.filter(project => {
+        const id = project._id || project.id;
+        return id && !id.startsWith('proj_');
+      });
       const taskGroups = await Promise.all(
-        backendProjects.map((project) => api.getProjectTasks(project._id || project.id || '')),
+        validProjects.map((project) => api.getProjectTasks(project._id || project.id || '')),
       )
       const nextTasks = taskGroups.flat()
       setTasks(nextTasks)
-      setProjects(api.mapProjects(backendProjects, nextTasks))
-      setTeamMembers(api.mapTeamMembers(backendProjects, user))
+      setProjects(api.mapProjects(validProjects, nextTasks))
+      setTeamMembers(api.mapTeamMembers(validProjects, user))
     },
     [],
   )
@@ -356,6 +361,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [refreshWorkspace, showToast],
   )
 
+  const deleteProject = useCallback(
+    async (id: string) => {
+      try {
+        await api.deleteProject(id)
+        await refreshWorkspace()
+        showToast('success', 'Project deleted successfully')
+      } catch (error) {
+        showToast('error', error instanceof Error ? error.message : 'Unable to delete project')
+        throw error
+      }
+    },
+    [refreshWorkspace, showToast],
+  )
+
   const canEditTask = useCallback(
     (taskId: string) => {
       const task = tasks.find((item) => item.id === taskId)
@@ -400,6 +419,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       changeUserRole,
       addProject,
       updateProject,
+      deleteProject,
       showToast,
       removeToast,
       canEditTask,
@@ -429,6 +449,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       changeUserRole,
       addProject,
       updateProject,
+      deleteProject,
       showToast,
       removeToast,
       canEditTask,

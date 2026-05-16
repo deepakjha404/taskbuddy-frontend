@@ -31,7 +31,7 @@ export default function TasksPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [deleteTaskId, setDeleteTaskId] = useState<string | null>(null)
 
-  const project = projects && projects.length > 0 ? projects[0] : { id: 'proj-1', name: 'Default Project' }
+  const project = projects && projects.length > 0 ? projects[0] : null
   const filteredTasks = tasks.filter((task) =>
     task.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     task.description.toLowerCase().includes(searchQuery.toLowerCase())
@@ -273,7 +273,7 @@ export default function TasksPage() {
           }
         }}
         task={editingTask}
-        projectId={project.id}
+        projectId={project?.id || ''}
       />
 
       {/* Delete Confirmation Dialog */}

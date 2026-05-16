@@ -301,6 +301,10 @@ export const api = {
     return data.project
   },
 
+  async deleteProject(id: string) {
+    await request(`/projects/${id}`, { method: 'DELETE' })
+  },
+
   async createTask(projectId: string, task: Omit<Task, 'id' | 'createdAt'>, fallbackAssignee: string) {
     const data = await request<{ task: BackendTask }>(`/tasks/projects/${projectId}`, {
       method: 'POST',

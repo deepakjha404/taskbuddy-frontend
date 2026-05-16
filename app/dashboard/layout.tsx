@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   LayoutDashboard,
+  Briefcase,
   CheckSquare,
   Users,
   Settings,
@@ -19,6 +20,7 @@ import { useApp } from '@/context/app-context'
 
 const navItems = [
   { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/dashboard/projects', icon: Briefcase, label: 'Projects' },
   { href: '/dashboard/tasks', icon: CheckSquare, label: 'Tasks' },
   { href: '/dashboard/team', icon: Users, label: 'Team' },
   { href: '/dashboard/settings', icon: Settings, label: 'Settings' },
