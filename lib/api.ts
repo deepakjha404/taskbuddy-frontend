@@ -3,7 +3,7 @@
 import type { Project, Task, TeamMember, UserRole } from '@/context/app-context'
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, '') || 'http://localhost:1432/api'
+  process.env.NEXT_PUBLIC_API_BASE_URL?.replace(/\/$/, '') || 'https://taskbuddy-backednd-production.up.railway.app/api'
 
 const TOKEN_KEY = 'taskbuddy_token'
 const USER_KEY = 'taskbuddy_user'
